@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { ThemeContext } from "./theme-context";
@@ -18,7 +18,6 @@ const months = [
   "Dec",
 ];
 const daysString = ["Sun", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const currentDate = new Date();
 
 const getDaysInMonthGrid = (month, year) => {
   const dateMin = new Date(year, month, 1);
@@ -29,16 +28,25 @@ const getDaysInMonthGrid = (month, year) => {
   return [...datesEmpty, ...datesFull];
 };
 
+const initDate = new Date();
+const initYear = initDate.getFullYear();
+const initMonth = initDate.getMonth();
+const initDaysGrid = getDaysInMonthGrid(initMonth, initYear);
+
 const Time = ({ handleDateChange }) => {
   const theme = useContext(ThemeContext);
-  const [month, setMonth] = useState(currentDate.getMonth());
-  const [year, setYear] = useState(currentDate.getFullYear());
-  const [days, setDays] = useState(getDaysInMonthGrid(month, year));
+  const [month, setMonth] = useState(initMonth);
+  const [year, setYear] = useState(initYear);
+  const [days, setDays] = useState(initDaysGrid);
   const [dateSelected, setDateSelected] = useState({
     day: null,
     month: null,
     year: null,
   });
+
+  useEffect(() => {
+    setDays(getDaysInMonthGrid(month, year));
+  }, [year, month]);
 
   const changeMonth = (index) => {
     const newDate = new Date(year, month + index);
@@ -47,7 +55,6 @@ const Time = ({ handleDateChange }) => {
 
     setMonth(newMonth);
     setYear(newYear);
-    setDays(getDaysInMonthGrid(newMonth, newYear));
   };
 
   const selectDay = (day) => {
