@@ -21,7 +21,7 @@ function App() {
     <ThemeContext.Provider value={theme}>
       <h3>Jarvis Coding Exercice</h3>
       <button onClick={toggleTheme} style={{ marginBottom: "20px" }}>
-        {theme === themes.dark ? "light mode" : "dark mode"}
+        {theme === themes.dark ? "Light mode ☀️" : "Dark mode 🌚"}
       </button>
       <Time handleDateChange={handleDateChange} />
     </ThemeContext.Provider>

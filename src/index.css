@@ -1,3 +1,13 @@
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -24,19 +34,27 @@ button {
   border-radius: 10px;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .days-wrapper {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
+  gap: 8px;
   margin: 20px 0px;
   text-align: center;
 }
 
 .day {
   cursor: pointer;
-  padding: 10px 0px;
+  padding: 10px 2px;
   transition: background-color 0.3s ease;
   border-radius: 5px;
+  border: 1px solid rgba(190, 185, 185, 0.09);
+  animation: fadein 0.5s;
 }
 .day:hover {
   background-color: #8e8c8c;
