@@ -20,6 +20,7 @@ const initDate = {
     currentDate.getMonth(),
     currentDate.getFullYear()
   ),
+  day: currentDate.getDate(),
   month: currentDate.getMonth(),
   year: currentDate.getFullYear(),
 };

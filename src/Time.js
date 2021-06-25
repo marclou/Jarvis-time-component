@@ -21,11 +21,29 @@ const Time = ({ handleDateChange }) => {
     month: null,
     year: null,
   });
+  const [specialDay, setSpecialDay] = useState(null);
 
   // re render the days grid when the month/year changes
   useEffect(() => {
     setDays(getDaysInMonthGrid(month, year));
   }, [year, month]);
+
+  // fetch new special day API when user select a new day
+  useEffect(() => {
+    if (dateSelected.day) {
+      // Free API which only provides data from last year (2020).
+      fetch(
+        `https://holidayapi.com/v1/holidays?pretty&key=87dcd9bf-150f-4fb0-a9a2-8b1ad3c3cbdf&country=US&year=2020&month=${
+          month + 1
+        }&day=${dateSelected.day}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setSpecialDay(data.holidays[0] ? data.holidays[0].name : null);
+        })
+        .catch((e) => setSpecialDay("Oops, try again"));
+    }
+  }, [dateSelected]);
 
   // re render when user change the current month on the calendar
   const changeMonth = (index) => {
@@ -58,9 +76,19 @@ const Time = ({ handleDateChange }) => {
       className="time-component"
       style={{ backgroundColor: theme.background, color: theme.foreground }}
     >
-      <h1>
-        {months[month]} {year}
-      </h1>
+      <div className="header">
+        <h1>
+          {months[month]} {year}
+        </h1>
+        <button
+          onClick={() => {
+            setMonth(initDate.month);
+            setYear(initDate.year);
+          }}
+        >
+          Today
+        </button>
+      </div>
 
       <div>
         <button onClick={() => changeMonth(-1)} style={{ marginRight: "10px" }}>
@@ -79,21 +107,25 @@ const Time = ({ handleDateChange }) => {
             return <div key={index}></div>;
           }
 
-          let isSelected = false;
+          let dayStyle = {
+            backgroundColor:
+              day === dateSelected.day &&
+              month === dateSelected.month &&
+              year === dateSelected.year &&
+              theme.highlight,
+            border:
+              day === initDate.day &&
+              month === initDate.month &&
+              year === initDate.year &&
+              "1px solid rgb(117, 117, 117)",
+          };
 
-          if (
-            day === dateSelected.day &&
-            month === dateSelected.month &&
-            year === dateSelected.year
-          ) {
-            isSelected = true;
-          }
           return (
             <div
               className="day"
               key={index}
               onClick={() => selectDay(day)}
-              style={isSelected ? { backgroundColor: theme.highlight } : {}}
+              style={dayStyle}
             >
               {day}
             </div>
@@ -102,11 +134,17 @@ const Time = ({ handleDateChange }) => {
       </div>
 
       {dateSelected.year && dateSelected.month && dateSelected.day && (
-        <div style={{ marginTop: "25px" }}>
-          Your date:{" "}
-          <b>
-            {dateSelected.day}-{months[dateSelected.month]}-{dateSelected.year}
-          </b>
+        <div style={{ marginTop: "20px" }}>
+          <div>
+            📆 Date:{" "}
+            <b>
+              {dateSelected.day}-{months[dateSelected.month]}-
+              {dateSelected.year}
+            </b>
+          </div>
+          <div style={{ marginTop: "10px" }}>
+            ✌️ Special day: {specialDay ? <b>{specialDay}</b> : "❌"}
+          </div>
         </div>
       )}
     </div>
