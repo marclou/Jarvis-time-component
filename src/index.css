@@ -21,6 +21,7 @@ button {
 
 .time-component {
   padding: 20px;
+  border-radius: 10px;
 }
 
 .days-wrapper {
@@ -33,7 +34,9 @@ button {
 
 .day {
   cursor: pointer;
-  padding: 10px 5px;
+  padding: 10px 0px;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
 }
 .day:hover {
   background-color: #8e8c8c;

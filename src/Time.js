@@ -2,22 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { ThemeContext } from "./theme-context";
-
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-const daysString = ["Sun", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+import CarretRight from "./svg/CarretRight";
+import CarretLeft from "./svg/CarretLeft";
+import { months, daysString } from "./data/date";
 
 const getDaysInMonthGrid = (month, year) => {
   const dateMin = new Date(year, month, 1);
@@ -83,11 +70,12 @@ const Time = ({ handleDateChange }) => {
 
       <div>
         <button onClick={() => changeMonth(-1)} style={{ marginRight: "10px" }}>
-          previous month
+          <CarretRight /> {months[month === 0 ? 11 : month - 1]}
         </button>
-        <button onClick={() => changeMonth(+1)}>next month</button>
+        <button onClick={() => changeMonth(+1)}>
+          {months[month === 11 ? 0 : month + 1]} <CarretLeft />
+        </button>
       </div>
-
       <div className="days-wrapper">
         {daysString.map((dayString, index) => {
           return <div key={dayString}>{dayString}</div>;
