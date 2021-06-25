@@ -4,37 +4,30 @@ import PropTypes from "prop-types";
 import { ThemeContext } from "./theme-context";
 import CarretRight from "./svg/CarretRight";
 import CarretLeft from "./svg/CarretLeft";
-import { months, daysString } from "./data/date";
-
-const getDaysInMonthGrid = (month, year) => {
-  const dateMin = new Date(year, month, 1);
-  const dateMax = new Date(year, month, 0);
-
-  const datesFull = [...Array(dateMax.getDate() + 1).keys()].slice(1, dateMax);
-  const datesEmpty = [...Array(dateMin.getDay()).keys()].map((_) => "");
-  return [...datesEmpty, ...datesFull];
-};
-
-const initDate = new Date();
-const initYear = initDate.getFullYear();
-const initMonth = initDate.getMonth();
-const initDaysGrid = getDaysInMonthGrid(initMonth, initYear);
+import {
+  months,
+  daysString,
+  initDate,
+  getDaysInMonthGrid,
+} from "./helpers/date";
 
 const Time = ({ handleDateChange }) => {
   const theme = useContext(ThemeContext);
-  const [month, setMonth] = useState(initMonth);
-  const [year, setYear] = useState(initYear);
-  const [days, setDays] = useState(initDaysGrid);
+  const [month, setMonth] = useState(initDate.month);
+  const [year, setYear] = useState(initDate.year);
+  const [days, setDays] = useState(initDate.daysGrid);
   const [dateSelected, setDateSelected] = useState({
     day: null,
     month: null,
     year: null,
   });
 
+  // re render the days grid when the month/year changes
   useEffect(() => {
     setDays(getDaysInMonthGrid(month, year));
   }, [year, month]);
 
+  // re render when user change the current month on the calendar
   const changeMonth = (index) => {
     const newDate = new Date(year, month + index);
     const newMonth = newDate.getMonth();
@@ -44,6 +37,7 @@ const Time = ({ handleDateChange }) => {
     setYear(newYear);
   };
 
+  // trigger when user select a day on the calendar, update state and run callback given as a prop
   const selectDay = (day) => {
     if (
       day !== dateSelected.day ||
